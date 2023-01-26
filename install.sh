@@ -43,7 +43,7 @@ cat << EOF > start_datalake.sh
 $PWD/components/spark-3.3.1-bin-hadoop3/sbin/start-thriftserver.sh \
 --conf spark.sql.extensions="org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions" \
 --conf spark.sql.catalog.my_catalog=org.apache.iceberg.spark.SparkCatalog \
---conf spark.sql.catalog.my_catalog.warehouse=file://$PWD/warehouse \
+--conf spark.sql.catalog.my_catalog.warehouse=file://$PWD/data \
 --conf spark.sql.catalog.my_catalog.default-namespace=default \
 --conf spark.sql.warehouse.dir=file://$PWD/data \
 --conf hive.metastore.warehouse.dir=file://$PWD/data \
@@ -51,12 +51,17 @@ $PWD/components/spark-3.3.1-bin-hadoop3/sbin/start-thriftserver.sh \
 --conf spark.hadoop.javax.jdo.option.ConnectionURL="jdbc:derby:$PWD/metastore-derby" \
 --conf spark.hadoop.javax.jdo.option.ConnectionDriverName=org.apache.derby.jdbc.EmbeddedDriver \
 --conf spark.sql.catalog.spark_catalog=org.apache.iceberg.spark.SparkSessionCatalog \
---conf spark.sql.catalog.spark_catalog.warehouse.dir=file://$PWD/warehouse \
+--conf spark.sql.catalog.spark_catalog.warehouse.dir=file://$PWD/data \
 --conf spark.eventLog.enabled=true \
 --conf spark.eventLog.dir=file://$PWD/spark-events \
 --conf spark.history.fs.logDirectory= file://$PWD/spark-events \
 --conf spark.sql.thriftServer.incrementalCollect=true \
---conf spark.sql.ansi.enabled=true
+--conf spark.sql.ansi.enabled=true \
+--conf spark.executor.memory=4g \
+--conf spark.driver.memory=3g \
+--conf spark.memory.offHeap.enabled=true \
+--conf spark.memory.offHeap.size=3g
+
 EOF
 
 chmod +x start_datalake.sh
